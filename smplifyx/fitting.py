@@ -18,6 +18,9 @@
 from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import division
+from vposer_v1_0 import vposer_smpl as v1
+from human_body_prior.tools.model_loader import load_model
+from human_body_prior.models.vposer_model import VPoser
 
 import sys
 import os
@@ -71,8 +74,9 @@ def guess_init(model,
 
     '''
 
-    body_pose = vposer.decode(
-        pose_embedding, output_type='aa').view(1, -1) if use_vposer else None
+    body_pose = (vposer.decode(pose_embedding).get( 'pose_body')).reshape(1, -1) if use_vposer else None
+
+    body_pose = (vposer.decode(pose_embedding).get('pose_body')).reshape(1, -1) if use_vposer else None
     if use_vposer and model_type == 'smpl':
         wrist_pose = torch.zeros([body_pose.shape[0], 6],
                                  dtype=body_pose.dtype,
@@ -230,9 +234,11 @@ class FittingMonitor(object):
             if backward:
                 optimizer.zero_grad()
 
-            body_pose = vposer.decode(
-                pose_embedding, output_type='aa').view(
-                    1, -1) if use_vposer else None
+            # body_pose = vposer.decode(
+            #     pose_embedding, output_type='aa').view(
+            #         1, -1) if use_vposer else None
+
+            body_pose = (vposer.decode(pose_embedding).get('pose_body')).reshape(1, -1) if use_vposer else None
 
             if append_wrists:
                 wrist_pose = torch.zeros([body_pose.shape[0], 6],
