@@ -332,6 +332,7 @@ class SMPLifyLoss(nn.Module):
             self.right_hand_prior = right_hand_prior
 
         self.use_face = use_face
+
         if self.use_face:
             self.expr_prior = expr_prior
             self.jaw_prior = jaw_prior

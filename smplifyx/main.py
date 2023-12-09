@@ -132,7 +132,6 @@ def main(**args):
 
     use_hands = args.get('use_hands', True)
     use_face = args.get('use_face', True)
-
     body_pose_prior = create_prior(
         prior_type=args.get('body_prior_type'),
         dtype=dtype,

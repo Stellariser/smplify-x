@@ -47,6 +47,8 @@ import fitting
 from human_body_prior.tools.model_loader import load_model
 from human_body_prior.models.vposer_model import VPoser
 
+
+
 def fit_single_frame(img,
                      keypoints,
                      body_model,
@@ -66,6 +68,7 @@ def fit_single_frame(img,
                      use_cuda=True,
                      init_joints_idxs=(9, 12, 2, 5),
                      use_face=True,
+                     only_up_body=False,
                      use_hands=True,
                      data_weights=None,
                      body_pose_prior_weights=None,
@@ -213,6 +216,8 @@ def fit_single_frame(img,
     pen_distance = None
     filter_faces = None
     if interpenetration:
+
+
         from mesh_intersection.bvh_search_tree import BVH
         import mesh_intersection.loss as collisions_loss
         from mesh_intersection.filter_faces import FilterFaces
@@ -423,6 +428,11 @@ def fit_single_frame(img,
                     joint_weights[:, 25:67] = curr_weights['hand_weight']
                 if use_face:
                     joint_weights[:, 67:] = curr_weights['face_weight']
+
+
+
+                joint_weights[:, 8:25] = 1           #Only Lower Body
+
                 loss.reset_loss_weights(curr_weights)
 
                 closure = monitor.create_fitting_closure(
